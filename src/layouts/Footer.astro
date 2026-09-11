@@ -93,5 +93,13 @@ const solutionLinks = [
         <a href={getAlternateRoute(Astro.url.pathname, otherLang)} class="font-semibold text-white transition-colors hover:text-steel-200">{otherLangLabel}</a>
       </div>
     </div>
+    <div class="mx-auto flex max-w-7xl px-4 pb-5 text-xs text-silver-400 sm:px-6 lg:px-8">
+      <p>
+        {lang === 'en' ? 'Website by' : 'Site web par'}
+        {' '}<a href="https://stopher-malik.co.za" rel="noopener" class="font-semibold text-silver-300 transition-colors hover:text-white">Stopher Malik</a>
+        {' '}&middot;{' '}
+        <a href="https://smk.stopher-malik.co.za" rel="noopener" class="font-semibold text-silver-300 transition-colors hover:text-white">SMK Web Design</a>
+      </p>
+    </div>
   </div>
 </footer>
