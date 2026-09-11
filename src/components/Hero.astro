@@ -1,0 +1,281 @@
+---
+import type { Locale } from '../i18n/translations';
+import { locales } from '../i18n/translations';
+import { assets } from '../data/assets';
+import { getRoute } from '../data/routes';
+import ResponsivePicture from './ResponsivePicture.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = locales[lang].hero;
+
+const rfq = getRoute('rfq', lang);
+const solutions = getRoute('solutions', lang);
+const products = getRoute('products', lang);
+const contact = getRoute('contact', lang);
+const procurement = getRoute('procurement', lang);
+
+const slides = t.slides.map((slide, i) => ({
+  ...slide,
+  image: assets.hero[i],
+  ctas: [
+    [
+      { label: slide.primaryCta, href: rfq },
+      { label: slide.secondaryCta, href: solutions },
+    ],
+    [
+      { label: slide.primaryCta, href: products },
+      { label: slide.secondaryCta, href: rfq },
+    ],
+    [
+      { label: slide.primaryCta, href: solutions },
+      { label: slide.secondaryCta, href: contact },
+    ],
+    [
+      { label: slide.primaryCta, href: rfq },
+      { label: slide.secondaryCta, href: procurement },
+    ],
+    [
+      { label: slide.primaryCta, href: solutions },
+      { label: slide.secondaryCta, href: rfq },
+    ],
+  ][i],
+}));
+
+const heroLabel = lang === 'en' ? 'Featured highlights' : 'Points forts';
+const prevLabel = lang === 'en' ? 'Previous slide' : 'Diapositive précédente';
+const nextLabel = lang === 'en' ? 'Next slide' : 'Diapositive suivante';
+const pauseLabel = lang === 'en' ? 'Pause carousel' : 'Mettre le carrousel en pause';
+const playLabel = lang === 'en' ? 'Play carousel' : 'Démarrer le carrousel';
+const goToLabel = (i: number) => (lang === 'en' ? `Go to slide ${i + 1}` : `Aller à la diapositive ${i + 1}`);
+---
+
+<section
+  id="hero"
+  class="hero-carousel relative isolate flex h-[100svh] min-h-[580px] items-center overflow-hidden bg-navy-950 max-lg:min-h-[560px] max-md:h-[86svh] max-md:min-h-[520px]"
+  aria-roledescription="carousel"
+  aria-label={heroLabel}
+>
+  {slides.map((slide, i) => (
+    <div
+      class={`hero-slide absolute inset-0 transition-opacity duration-[900ms] ease-out ${i === 0 ? 'is-active opacity-100' : 'opacity-0'}`}
+      data-slide={i}
+      aria-hidden={i !== 0 ? 'true' : undefined}
+      aria-label={`${i + 1} / ${slides.length}`}
+    >
+      <div class="absolute inset-0 overflow-hidden">
+        <ResponsivePicture
+          image={slide.image}
+          alt=""
+          width="1920"
+          height="1080"
+          pictureClass="block h-full w-full"
+          class={`hero-bg h-full w-full object-cover ${i === 0 ? 'ken-burns' : ''}`}
+          style="object-position: center"
+          loading={i === 0 ? 'eager' : 'lazy'}
+          decoding={i === 0 ? 'sync' : 'async'}
+          fetchpriority={i === 0 ? 'high' : undefined}
+        />
+      </div>
+      <div class="hero-overlay absolute inset-0 bg-gradient-to-r from-navy-950/78 via-navy-950/42 to-navy-950/5"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-navy-950/62 via-transparent to-navy-950/25 max-md:from-navy-950/78 max-md:via-navy-950/32"></div>
+
+      <div class="relative mx-auto flex h-full w-full max-w-[1600px] items-center px-5 pb-24 sm:px-6 lg:px-8 max-md:pb-28">
+        <div class="w-full min-w-0 max-w-[46rem]">
+          <p class="hero-animate mb-5 text-xs font-bold tracking-[0.24em] text-steel-200 sm:text-sm" style="animation-delay:.15s">{slide.eyebrow}</p>
+          <h1 class="hero-title hero-animate max-w-[20ch] text-[clamp(1.9rem,8.6vw,2.75rem)] font-bold leading-[1.07] text-white sm:text-5xl lg:text-6xl" style="animation-delay:.3s">{slide.title}</h1>
+          <p class="hero-animate mt-6 max-w-[38rem] text-base leading-7 text-white/88 sm:text-lg sm:leading-8 max-md:pr-4" style="animation-delay:.45s">{slide.body}</p>
+          <div class="hero-actions hero-animate mt-9 flex flex-wrap items-center gap-3.5 max-md:gap-3" style="animation-delay:.6s">
+            <a href={slide.ctas[0].href} class="btn-primary">
+              {slide.ctas[0].label}
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href={slide.ctas[1].href} class="btn-secondary">
+              {slide.ctas[1].label}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+
+  <button id="hero-prev" class="hero-arrow absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-navy-950/25 text-white backdrop-blur-md transition hover:border-white/50 hover:bg-navy-950/45 md:left-6 lg:flex" aria-label={prevLabel} type="button">
+    <svg aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m15 19-7-7 7-7" /></svg>
+  </button>
+  <button id="hero-next" class="hero-arrow absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-navy-950/25 text-white backdrop-blur-md transition hover:border-white/50 hover:bg-navy-950/45 md:right-6 lg:flex" aria-label={nextLabel} type="button">
+    <svg aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7" /></svg>
+  </button>
+
+  <div class="absolute bottom-6 left-4 z-20 flex w-[calc(100%-7rem)] items-center gap-3 sm:left-6 lg:left-8 lg:w-auto">
+    {slides.map((_, i) => (
+      <button
+        class={`hero-dot h-2.5 w-2.5 rounded-full border border-white/50 transition-all ${i === 0 ? 'w-10 bg-steel-300' : 'bg-white/25 hover:bg-white/50'}`}
+        data-slide={i}
+        aria-label={goToLabel(i)}
+        aria-current={i === 0 ? 'true' : undefined}
+        type="button"
+      />
+    ))}
+  </div>
+
+  <button id="hero-toggle-autoplay" class="absolute bottom-4 right-4 z-20 inline-flex h-11 items-center gap-2 rounded-full border border-white/25 bg-navy-950/25 px-4 text-[11px] font-semibold tracking-wider text-white backdrop-blur-md transition hover:border-white/50 hover:bg-navy-950/45 sm:bottom-6 sm:right-6 lg:right-8" aria-label={pauseLabel} aria-pressed="false" type="button">
+    <svg aria-hidden="true" class="hero-icon-pause h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M7 4h4v16H7zM13 4h4v16h-4z" /></svg>
+    <svg aria-hidden="true" class="hero-icon-play hidden h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z" /></svg>
+    <span class="hero-toggle-label hidden sm:inline">{lang === 'en' ? 'PAUSE' : 'PAUSE'}</span>
+  </button>
+</section>
+
+<style>
+  .ken-burns {
+    animation: ken-burns 5s ease-in-out forwards;
+  }
+  @keyframes ken-burns {
+    0% { transform: scale(1) translateX(0); }
+    50% { transform: scale(1.065) translateX(-0.9%); }
+    100% { transform: scale(1) translateX(0); }
+  }
+  .hero-animate {
+    animation: hero-rise .9s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes hero-rise {
+    from { opacity: 0; transform: translateY(26px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-slide:not(.is-active) {
+    pointer-events: none;
+  }
+  @media (max-width: 480px) {
+    .hero-title {
+      overflow-wrap: anywhere;
+    }
+    .hero-actions {
+      display: grid;
+      width: 100%;
+    }
+    .hero-actions :global(a) {
+      width: 100%;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ken-burns, .hero-animate {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  const section = document.getElementById('hero');
+  const slides = Array.from(section?.querySelectorAll<HTMLElement>('.hero-slide') ?? []);
+  const dots = Array.from(section?.querySelectorAll<HTMLButtonElement>('.hero-dot') ?? []);
+  const toggleBtn = document.getElementById('hero-toggle-autoplay') as HTMLButtonElement | null;
+  const pauseIcons = toggleBtn?.querySelectorAll('.hero-icon-pause') ?? [];
+  const playIcons = toggleBtn?.querySelectorAll('.hero-icon-play') ?? [];
+  const pauseLabels = toggleBtn?.querySelectorAll('.hero-toggle-label') ?? [];
+  const INTERVAL = 5000;
+  let current = 0;
+  let timer: ReturnType<typeof setInterval> | undefined;
+  let userPaused = false;
+  let hovered = false;
+
+  const setActive = (index: number) => {
+    slides.forEach((slide, i) => {
+      const on = i === index;
+      slide.classList.toggle('is-active', on);
+      slide.classList.toggle('opacity-100', on);
+      slide.classList.toggle('opacity-0', !on);
+      if (on) slide.removeAttribute('aria-hidden');
+      else slide.setAttribute('aria-hidden', 'true');
+      if ('inert' in slide) slide.toggleAttribute('inert', !on);
+      slide.querySelectorAll<HTMLAnchorElement>('.hero-animate a').forEach((link) => {
+        link.tabIndex = on ? 0 : -1;
+      });
+      if (on) {
+        const bg = slide.querySelector('.hero-bg');
+        bg?.classList.remove('ken-burns');
+        void bg?.offsetWidth;
+        bg?.classList.add('ken-burns');
+        slide.querySelectorAll('.hero-animate').forEach((el, k) => {
+          el.classList.remove('hero-animate');
+          void (el as HTMLElement).offsetWidth;
+          el.classList.add('hero-animate');
+          (el as HTMLElement).style.animationDelay = `${0.15 + k * 0.15}s`;
+        });
+      }
+    });
+    dots.forEach((dot, i) => {
+      const on = i === index;
+      dot.classList.toggle('w-10', on);
+      dot.classList.toggle('bg-steel-300', on);
+      dot.classList.toggle('bg-white/25', !on);
+      if (on) dot.setAttribute('aria-current', 'true');
+      else dot.removeAttribute('aria-current');
+    });
+    current = index;
+  };
+
+  const goTo = (index: number) => setActive((index + slides.length) % slides.length);
+  const next = () => goTo(current + 1);
+  const prev = () => goTo(current - 1);
+
+  const play = () => {
+    stop();
+    timer = setInterval(next, INTERVAL);
+  };
+  const stop = () => clearInterval(timer);
+
+  const setPaused = (paused: boolean) => {
+    userPaused = paused;
+    stop();
+    if (!paused) play();
+    toggleBtn?.setAttribute('aria-pressed', String(paused));
+    pauseIcons.forEach((el) => el.classList.toggle('hidden', paused));
+    playIcons.forEach((el) => el.classList.toggle('hidden', !paused));
+    if (pauseLabels.length) {
+      const label = document.documentElement.lang === 'fr' ? (paused ? 'LECTURE' : 'PAUSE') : (paused ? 'PLAY' : 'PAUSE');
+      pauseLabels.forEach((el) => (el.textContent = label));
+    }
+    const ariaLabelKey = paused ? 'playLabel' : 'pauseLabel';
+    const ariaText = document.documentElement.lang === 'fr'
+      ? (paused ? 'Démarrer le carrousel' : 'Mettre le carrousel en pause')
+      : (paused ? 'Play carousel' : 'Pause carousel');
+    void ariaLabelKey;
+    toggleBtn?.setAttribute('aria-label', ariaText);
+  };
+
+  document.getElementById('hero-prev')?.addEventListener('click', () => { prev(); if (!userPaused && !hovered) play(); });
+  document.getElementById('hero-next')?.addEventListener('click', () => { next(); if (!userPaused && !hovered) play(); });
+  dots.forEach((dot) => dot.addEventListener('click', () => { goTo(Number(dot.dataset.slide)); if (!userPaused && !hovered) play(); }));
+  toggleBtn?.addEventListener('click', () => setPaused(!userPaused));
+
+  section?.addEventListener('mouseenter', () => { hovered = true; if (!userPaused) stop(); });
+  section?.addEventListener('mouseleave', () => { hovered = false; if (!userPaused) play(); });
+  section?.addEventListener('focusin', () => { if (!userPaused) stop(); });
+  section?.addEventListener('focusout', (event) => {
+    if (!userPaused && !section?.contains(event.relatedTarget as Node)) play();
+  });
+  section?.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') { prev(); if (!userPaused) play(); }
+    if (event.key === 'ArrowRight') { next(); if (!userPaused) play(); }
+  });
+
+  let touchStartX = 0;
+  section?.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].screenX; }, { passive: true });
+  section?.addEventListener('touchend', (event) => {
+    const diff = touchStartX - event.changedTouches[0].screenX;
+    if (Math.abs(diff) > 48) {
+      if (diff > 0) next(); else prev();
+      if (!userPaused) play();
+    }
+  }, { passive: true });
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const applyMotionPreference = () => {
+    if (reducedMotion.matches) stop();
+    else if (!userPaused && !hovered) play();
+  };
+  reducedMotion.addEventListener?.('change', applyMotionPreference);
+  applyMotionPreference();
+</script>

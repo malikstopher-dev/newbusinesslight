@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHero from '../../components/InnerHero.astro';
+import CTASection from '../../components/CTASection.astro';
+import ResponsivePicture from '../../components/ResponsivePicture.astro';
+import { assets, pageHeroes } from '../../data/assets';
+import { getRoute } from '../../data/routes';
+import { locales } from '../../i18n/translations';
+
+const lang = 'en' as const;
+const t = locales[lang];
+---
+
+<BaseLayout
+  title="Procurement | New Business Light sarl | Industrial Procurement DRC"
+  description="How NBL coordinates industrial procurement in the DRC: requirement review, supplier identification, commercial offer, order confirmation and delivery coordination."
+  lang={lang}
+  canonicalPath="/en/procurement"
+  preloadImage={pageHeroes.procurement}
+>
+  <InnerHero
+    lang={lang}
+    eyebrow={t.procurement.eyebrow}
+    title={t.procurement.title}
+    description={t.procurement.description}
+    image={pageHeroes.procurement}
+    imagePosition="center 42%"
+    overlayStrength="balanced"
+  />
+
+  <section class="bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <ol class="relative grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+        {t.procurement.steps.map((step) => (
+          <li class="relative flex gap-5 rounded-md border border-coolgray-200 bg-coolgray-50 p-6">
+            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-navy font-heading text-base font-bold text-white">{step.number}</span>
+            <div>
+              <h2 class="font-heading text-base font-bold text-navy">{step.title}</h2>
+              <p class="mt-1.5 text-sm leading-6 text-coolgray-700">{step.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="bg-coolgray-100 py-16 lg:py-24">
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
+      <ResponsivePicture image={assets.procurement.logistics} alt="Logistics and delivery coordination" width="1600" height="900" loading="lazy" decoding="async" class="aspect-[16/10] w-full rounded-md object-cover shadow-[0_18px_50px_rgba(7,23,42,0.09)]" />
+      <div>
+        <p class="section-eyebrow">DELIVERY COORDINATION</p>
+        <h2 class="section-title mt-4">One structured process, one point of contact</h2>
+        <p class="section-body mt-5">
+          Each requirement is handled through the same structured steps — clear specification, transparent quotation and coordinated delivery — so your team always knows where the order stands.
+        </p>
+        <ul class="mt-7 space-y-3">
+          {['Requirement review before sourcing', 'Commercial quotation for confirmation', 'Delivery coordinated to your site'].map((point) => (
+            <li class="flex items-start gap-3 text-sm leading-6 text-coolgray-700">
+              <svg aria-hidden="true" class="mt-0.5 h-4 w-4 shrink-0 text-steel" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m5 13 4 4L19 7" /></svg>
+              {point}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    title="Start your requirement today"
+    description="Submit your specification through our RFQ form and our team will begin the review."
+    tone="navy"
+    primary={{ label: t.nav.rfq, href: getRoute('rfq', lang) }}
+    secondary={{ label: t.nav.contact, href: getRoute('contact', lang) }}
+  />
+</BaseLayout>

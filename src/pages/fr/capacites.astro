@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHero from '../../components/InnerHero.astro';
+import CTASection from '../../components/CTASection.astro';
+import ResponsivePicture from '../../components/ResponsivePicture.astro';
+import { assets, pageHeroes } from '../../data/assets';
+import { getRoute } from '../../data/routes';
+import { locales } from '../../i18n/translations';
+
+const lang = 'fr' as const;
+const t = locales[lang];
+---
+
+<BaseLayout
+  title="Capacités | New Business Light sarl | Sourcing et coordination de fourniture"
+  description="Capacités NBL : identification de fournisseurs, analyse des besoins, préparation commerciale et coordination de la livraison pour la fourniture industrielle en RDC."
+  lang={lang}
+  canonicalPath="/fr/capacites"
+  preloadImage={pageHeroes.capabilities}
+>
+  <InnerHero
+    lang={lang}
+    eyebrow={t.capabilities.eyebrow}
+    title={t.capabilities.title}
+    description={t.capabilities.description}
+    image={pageHeroes.capabilities}
+    imagePosition="center 55%"
+    overlayStrength="balanced"
+  />
+
+  <section class="bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-5 md:grid-cols-2">
+        {t.capabilities.items.map((item, i) => (
+          <article class="flex gap-6 rounded-md border border-coolgray-200 bg-coolgray-50 p-7 transition-colors hover:border-steel-300">
+            <span class="font-heading text-3xl font-bold text-coolgray-200">0{i + 1}</span>
+            <div>
+              <h2 class="font-heading text-lg font-bold text-navy">{item.title}</h2>
+              <p class="mt-2 text-sm leading-6 text-coolgray-700">{item.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-coolgray-100 py-16 lg:py-24">
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
+      <div>
+        <p class="section-eyebrow">NOTRE PÉRIMÈTRE</p>
+        <h2 class="section-title mt-4">Ce que nous coordonnons — sans dépasser notre rôle</h2>
+        <p class="section-body mt-5">
+          Le travail de NBL porte sur la fourniture, l'approvisionnement et la coordination de sourcing. Nous ne nous présentons ni comme bureau d'études, ni comme installateur, représentant OEM ou organisme de contrôle certifié. Lorsqu'un besoin sort de ce périmètre, nous le disons clairement.
+        </p>
+        <p class="section-body mt-4">
+          Tant que des études de cas formelles ne sont pas validées pour publication, cette page décrit uniquement nos capacités de travail.
+        </p>
+      </div>
+      <ResponsivePicture image={assets.solutions.electrical} alt="Produits électriques et d'infrastructure coordonnés par NBL" width="1600" height="900" loading="lazy" decoding="async" class="aspect-[16/10] w-full rounded-md object-cover shadow-[0_18px_50px_rgba(7,23,42,0.09)]" />
+    </div>
+  </section>
+
+  <CTASection
+    title="Mettez notre coordination à l'épreuve"
+    description="Transmettez un besoin et jugez le processus par vous-même."
+    tone="steel"
+    primary={{ label: t.nav.rfq, href: getRoute('rfq', lang) }}
+    secondary={{ label: t.nav.procurement, href: getRoute('procurement', lang) }}
+  />
+</BaseLayout>

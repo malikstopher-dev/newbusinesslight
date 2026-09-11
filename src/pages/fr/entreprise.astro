@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHero from '../../components/InnerHero.astro';
+import CTASection from '../../components/CTASection.astro';
+import ResponsivePicture from '../../components/ResponsivePicture.astro';
+import { assets, pageHeroes, solutionImages } from '../../data/assets';
+import { getRoute } from '../../data/routes';
+import { locales } from '../../i18n/translations';
+
+const lang = 'fr' as const;
+const t = locales[lang];
+---
+
+<BaseLayout
+  title="Entreprise | New Business Light sarl | Fourniture industrielle RDC"
+  description="New Business Light sarl est une entreprise de fourniture industrielle, d'approvisionnement et de sourcing basée à Lubumbashi, en République démocratique du Congo."
+  lang={lang}
+  canonicalPath="/fr/entreprise"
+  preloadImage={pageHeroes.company}
+>
+  <InnerHero
+    lang={lang}
+    eyebrow="À PROPOS DE NBL"
+    title="Approvisionner aujourd'hui pour un demain plus brillant"
+    description="Entreprise de fourniture industrielle et de sourcing basée à Lubumbashi, au service d'opérations dans toute la République démocratique du Congo."
+    image={pageHeroes.company}
+    imagePosition="center 40%"
+    overlayStrength="balanced"
+  />
+
+  <section class="bg-white py-16 lg:py-28">
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
+      <div class="max-w-xl">
+        <p class="section-eyebrow">QUI SOMMES-NOUS</p>
+        <h2 class="section-title mt-4">Un partenaire de fourniture bâti autour des besoins industriels</h2>
+        <p class="section-body mt-6">
+          New Business Light sarl fournit un appui en fourniture industrielle, approvisionnement et sourcing aux opérations minières, de traitement, de construction et de maintenance en RDC.
+        </p>
+        <p class="section-body mt-4">
+          Nous faisons le lien entre fournisseurs internationaux et opérations congolaises : analyse des besoins, identification des produits, préparation d'offres commerciales et coordination de la livraison, pour que les équipes terrain disposent d'un interlocuteur unique et structuré.
+        </p>
+      </div>
+      <ResponsivePicture image={assets.about.operations} alt="Opérations industrielles NBL" width="1600" height="900" loading="lazy" decoding="async" class="aspect-[16/10] w-full rounded-md object-cover shadow-[0_18px_50px_rgba(7,23,42,0.09)]" />
+    </div>
+  </section>
+
+  <section class="bg-coolgray-100 py-16 lg:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl">
+        <p class="section-eyebrow">CE QUE NOUS FAISONS</p>
+        <h2 class="section-title mt-4">Nos services principaux</h2>
+      </div>
+      <div class="mt-12 grid gap-5 md:grid-cols-3">
+        {t.solutions.items.slice(0, 3).map((solution, i) => (
+          <div class="group overflow-hidden rounded-md bg-white shadow-[0_10px_30px_rgba(7,23,42,0.06)]">
+            <div class="aspect-[16/9] overflow-hidden">
+              <ResponsivePicture image={solutionImages[i]} alt="" width="1600" height="900" loading="lazy" decoding="async" pictureClass="block h-full w-full" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            </div>
+            <div class="p-6">
+              <h3 class="font-heading text-lg font-bold text-navy">{solution.title}</h3>
+              <p class="mt-2 text-sm leading-6 text-coolgray-700">{solution.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-16 lg:py-28">
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
+      <ResponsivePicture image={assets.procurement.warehouse} alt="Coordination approvisionnement et entrepôt" width="1600" height="900" loading="lazy" decoding="async" class="aspect-[16/10] w-full rounded-md object-cover shadow-[0_18px_50px_rgba(7,23,42,0.09)]" />
+      <div>
+        <p class="section-eyebrow">NOTRE MÉTHODE</p>
+        <h2 class="section-title mt-4">Un parcours structuré, du besoin à la fourniture</h2>
+        <div class="mt-8 space-y-0 border-t border-coolgray-200">
+          {t.procurement.steps.slice(0, 3).map((step, i) => (
+            <div class="flex gap-6 border-b border-coolgray-200 py-6">
+              <span class="font-heading text-2xl font-bold text-coolgray-200">0{i + 1}</span>
+              <div>
+                <h3 class="font-heading text-base font-bold text-navy">{step.title}</h3>
+                <p class="mt-1.5 text-sm leading-6 text-coolgray-700">{step.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <a href={getRoute('procurement', lang)} class="btn-navy mt-8">Notre processus d'approvisionnement<span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-coolgray-100 py-16 lg:py-28">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="section-eyebrow justify-center">VALEURS</p>
+        <h2 class="section-title mt-4">Ce qui guide notre travail</h2>
+      </div>
+      <div class="mt-12 grid gap-5 sm:grid-cols-3">
+        <div class="rounded-md border-t-2 border-steel bg-white p-8 text-center shadow-[0_10px_30px_rgba(7,23,42,0.05)]">
+          <h3 class="font-heading text-lg font-bold text-navy">Confiance</h3>
+          <p class="mt-2 text-sm leading-6 text-coolgray-700">Une communication claire et une coordination fiable pour chaque besoin.</p>
+        </div>
+        <div class="rounded-md border-t-2 border-steel bg-white p-8 text-center shadow-[0_10px_30px_rgba(7,23,42,0.05)]">
+          <h3 class="font-heading text-lg font-bold text-navy">Force</h3>
+          <p class="mt-2 text-sm leading-6 text-coolgray-700">Un processus de sourcing structuré, conçu pour des environnements exigeants.</p>
+        </div>
+        <div class="rounded-md border-t-2 border-steel bg-white p-8 text-center shadow-[0_10px_30px_rgba(7,23,42,0.05)]">
+          <h3 class="font-heading text-lg font-bold text-navy">Professionnalisme</h3>
+          <p class="mt-2 text-sm leading-6 text-coolgray-700">Une pratique B2B rigoureuse, de l'analyse du besoin à l'offre commerciale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    title="Discutons de vos besoins"
+    description="Transmettez-nous votre cahier des charges et notre équipe coordonnera la suite."
+    tone="steel"
+    primary={{ label: t.nav.rfq, href: getRoute('rfq', lang) }}
+    secondary={{ label: t.nav.contact, href: getRoute('contact', lang) }}
+  />
+</BaseLayout>

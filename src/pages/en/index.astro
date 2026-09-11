@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HomePage from '../../components/HomePage.astro';
+import { assets } from '../../data/assets';
+import { locales } from '../../i18n/translations';
+
+const lang = 'en' as const;
+const t = locales[lang];
+---
+
+<BaseLayout
+  title="New Business Light sarl | Industrial Supply, Procurement & Sourcing | DRC"
+  description="Industrial supply, procurement and product sourcing coordinated from Lubumbashi for mining, processing and infrastructure operations across the Democratic Republic of the Congo."
+  lang={lang}
+  canonicalPath="/en"
+  preloadImage={assets.hero[0]}
+>
+  <HomePage lang={lang} />
+  <section class="bg-white pb-16 lg:pb-24">
+    <div class="mx-auto grid max-w-7xl gap-5 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
+      <div class="rounded-md border border-coolgray-200 p-6 text-center">
+        <span aria-hidden="true" class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-steel-50 text-steel">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-5.1-7-11a7 7 0 1 1 14 0c0 5.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        </span>
+        <h2 class="font-heading text-base font-bold text-navy">{t.contact.address.title}</h2>
+        <p class="mt-2 text-sm leading-6 text-coolgray-700">New Business Light sarl<br />N°04, Av. Cascade, Quartier Makomeno<br />Lubumbashi Haut, DRC</p>
+      </div>
+      <div class="rounded-md border border-coolgray-200 p-6 text-center">
+        <span aria-hidden="true" class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-steel-50 text-steel">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5.5C3 4.7 3.7 4 4.5 4h2.7c.7 0 1.3.5 1.5 1.2l1 3.1c.1.6-.1 1.2-.6 1.5l-1.5 1c1 2.2 2.9 4.1 5.1 5.1l1-1.5c.4-.5 1-.7 1.5-.6l3.1 1c.7.2 1.2.8 1.2 1.5v2.7c0 .8-.7 1.5-1.5 1.5h-1C9.7 21.5 3 14.8 3 6.5v-1Z"/></svg>
+        </span>
+        <h2 class="font-heading text-base font-bold text-navy">{t.contact.phone.title}</h2>
+        <p class="mt-2 text-sm leading-6 text-coolgray-700"><a class="font-semibold text-steel" href="tel:+243990902654">+243 990 902 654</a></p>
+      </div>
+      <div class="rounded-md border border-coolgray-200 p-6 text-center">
+        <span aria-hidden="true" class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-steel-50 text-steel">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.9 5.3a2 2 0 0 0 2.2 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z"/></svg>
+        </span>
+        <h2 class="font-heading text-base font-bold text-navy">{t.contact.emails.title}</h2>
+        <p class="mt-2 text-sm leading-6 text-coolgray-700">
+          <a class="break-anywhere font-semibold text-steel" href="mailto:newbusinesslight@gmail.com">newbusinesslight@gmail.com</a><br />
+          <a class="break-anywhere font-semibold text-steel" href="mailto:info@newbusinesslight.com">info@newbusinesslight.com</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

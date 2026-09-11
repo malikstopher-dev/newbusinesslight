@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHero from '../../components/InnerHero.astro';
+import CTASection from '../../components/CTASection.astro';
+import ResponsivePicture from '../../components/ResponsivePicture.astro';
+import { pageHeroes, industryImages } from '../../data/assets';
+import { getRoute } from '../../data/routes';
+import { locales } from '../../i18n/translations';
+
+const lang = 'en' as const;
+const t = locales[lang];
+---
+
+<BaseLayout
+  title="Industries | New Business Light sarl | Mining & Industrial Supply DRC"
+  description="Sectors NBL supports in the DRC: mining, industrial processing, construction and infrastructure, maintenance and operations, and commercial procurement."
+  lang={lang}
+  canonicalPath="/en/industries"
+  preloadImage={pageHeroes.industries}
+>
+  <InnerHero
+    lang={lang}
+    eyebrow={t.industries.eyebrow}
+    title={t.industries.title}
+    description="Industrial supply coordinated for mining, processing, construction, maintenance and commercial operations across the DRC."
+    image={pageHeroes.industries}
+    imagePosition="center 55%"
+    overlayStrength="balanced"
+  />
+
+  <section class="bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl space-y-14 px-4 sm:px-6 lg:px-8 lg:space-y-24">
+      {t.industries.items.map((industry, i) => (
+        <article class={`grid items-center gap-10 lg:grid-cols-2 lg:gap-16 ${i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''}`}>
+          <ResponsivePicture image={industryImages[i]} alt="" width="1600" height="900" loading="lazy" decoding="async" class="aspect-[16/10] w-full rounded-md object-cover shadow-[0_18px_50px_rgba(7,23,42,0.09)]" />
+          <div>
+            <span class="font-heading text-sm font-bold tracking-widest text-steel">0{i + 1}</span>
+            <h2 class="section-title mt-3 text-[clamp(1.6rem,3vw,2.5rem)]">{industry.title}</h2>
+            <p class="section-body mt-4">{industry.description}</p>
+            <a href={getRoute('rfq', lang)} class="btn-navy mt-7">Send Your Requirement<span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <CTASection
+    title="Your sector, your specification"
+    description="Whatever the sector, the process starts with a clear requirement. Send us yours."
+    tone="navy"
+    primary={{ label: t.nav.rfq, href: getRoute('rfq', lang) }}
+    secondary={{ label: t.nav.solutions, href: getRoute('solutions', lang) }}
+  />
+</BaseLayout>

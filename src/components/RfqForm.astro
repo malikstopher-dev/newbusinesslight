@@ -1,0 +1,226 @@
+---
+import type { Locale } from '../i18n/translations';
+import { locales } from '../i18n/translations';
+import { getRoute } from '../data/routes';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = locales[lang].rfq;
+const nav = locales[lang].nav;
+
+const industries = lang === 'en'
+  ? ['Mining', 'Industrial Processing', 'Construction & Infrastructure', 'Maintenance & Operations', 'Commercial / Institutional', 'Other']
+  : ['Mines', 'Traitement industriel', 'Construction & Infrastructure', 'Maintenance & Exploitation', 'Commerce / Institutions', 'Autre'];
+
+const requiredLabel = lang === 'en' ? 'required' : 'obligatoire';
+const optionalNote = lang === 'en'
+  ? 'Fields marked * are required. Attachments: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (max 10 MB).'
+  : 'Les champs marqués * sont obligatoires. Pièces jointes : PDF, DOC, DOCX, XLS, XLSX, JPG, PNG (max 10 Mo).';
+const consentNote = lang === 'en'
+  ? 'Details submitted are used only to prepare your quotation and coordinate supply.'
+  : 'Les informations transmises servent uniquement à la préparation de votre devis et à la coordination de la fourniture.';
+const filePrompt = lang === 'en' ? 'Add an attachment' : 'Ajouter une pièce jointe';
+const sizeError = lang === 'en' ? 'This file is larger than 10 MB. Please attach a smaller file.' : 'Ce fichier dépasse 10 Mo. Veuillez joindre un fichier plus léger.';
+const fileTypeError = lang === 'en' ? 'This file type is not supported.' : 'Ce type de fichier n\'est pas pris en charge.';
+const submitWait = lang === 'en' ? 'Opening your email application…' : 'Ouverture de votre application e-mail…';
+const submitAgain = t.submit;
+
+const inputClass =
+  'w-full min-h-12 border border-coolgray-300 bg-white px-4 py-3 text-navy-950 text-[15px] transition-colors placeholder:text-coolgray-500 focus:border-steel-400 focus:outline-none focus:ring-4 focus:ring-steel-100';
+const labelClass = 'mb-2 flex items-baseline gap-1.5 text-sm font-semibold text-navy';
+---
+
+<div class="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+  <form
+    id="rfq-form"
+    class="rounded-lg border border-coolgray-200 bg-white p-6 shadow-[0_18px_50px_rgba(7,23,42,0.09)] sm:p-8 lg:p-10"
+    novalidate
+  >
+    <p class="mb-6 text-xs leading-5 text-coolgray-600">{optionalNote}</p>
+
+    <div class="grid gap-5 md:grid-cols-2">
+      <div>
+        <label for="rfq-company" class={labelClass}>{t.fields.company} <span aria-hidden="true" class="text-red-600">*</span></label>
+        <input type="text" id="rfq-company" name="company" required autocomplete="organization" class={inputClass} placeholder={lang === 'en' ? 'Company name' : 'Nom de l\'entreprise'} />
+      </div>
+      <div>
+        <label for="rfq-contact" class={labelClass}>{t.fields.contact} <span aria-hidden="true" class="text-red-600">*</span></label>
+        <input type="text" id="rfq-contact" name="contact" required autocomplete="name" class={inputClass} placeholder={lang === 'en' ? 'Full name' : 'Nom complet'} />
+      </div>
+      <div>
+        <label for="rfq-email" class={labelClass}>{t.fields.email} <span aria-hidden="true" class="text-red-600">*</span></label>
+        <input type="email" id="rfq-email" name="email" required autocomplete="email" class={inputClass} placeholder="name@company.com" />
+      </div>
+      <div>
+        <label for="rfq-phone" class={labelClass}>{t.fields.phone}</label>
+        <input type="tel" id="rfq-phone" name="phone" autocomplete="tel" class={inputClass} placeholder="+243 …" />
+      </div>
+      <div>
+        <label for="rfq-country" class={labelClass}>{t.fields.country} <span aria-hidden="true" class="text-red-600">*</span></label>
+        <input type="text" id="rfq-country" name="country" required autocomplete="country-name" class={inputClass} placeholder={lang === 'en' ? 'Country' : 'Pays'} />
+      </div>
+      <div>
+        <label for="rfq-city" class={labelClass}>{t.fields.city}</label>
+        <input type="text" id="rfq-city" name="city" autocomplete="address-level2" class={inputClass} placeholder={lang === 'en' ? 'City' : 'Ville'} />
+      </div>
+      <div class="md:col-span-2">
+        <label for="rfq-industry" class={labelClass}>{t.fields.industry} <span aria-hidden="true" class="text-red-600">*</span></label>
+        <select id="rfq-industry" name="industry" required class={inputClass}>
+          <option value="">{lang === 'en' ? 'Select an industry' : 'Sélectionnez un secteur'}</option>
+          {industries.map((industry) => <option value={industry}>{industry}</option>)}
+        </select>
+      </div>
+      <div>
+        <label for="rfq-product" class={labelClass}>{t.fields.product} <span aria-hidden="true" class="text-red-600">*</span></label>
+        <input type="text" id="rfq-product" name="product" required class={inputClass} placeholder={lang === 'en' ? 'Product or requirement' : 'Produit ou besoin'} />
+      </div>
+      <div>
+        <label for="rfq-quantity" class={labelClass}>{t.fields.quantity}</label>
+        <input type="text" inputmode="numeric" id="rfq-quantity" name="quantity" class={inputClass} placeholder={lang === 'en' ? 'Quantity' : 'Quantité'} />
+      </div>
+      <div class="md:col-span-2">
+        <label for="rfq-date" class={labelClass}>{t.fields.deliveryDate}</label>
+        <input type="date" id="rfq-date" name="deliveryDate" class={inputClass} />
+      </div>
+      <div class="md:col-span-2">
+        <label for="rfq-message" class={labelClass}>{t.fields.message} <span aria-hidden="true" class="text-red-600">*</span></label>
+        <textarea id="rfq-message" name="message" required rows="5" class={`${inputClass} resize-y py-3`} placeholder={lang === 'en' ? 'Specifications, standards, delivery location…' : 'Spécifications, normes, lieu de livraison…'}></textarea>
+      </div>
+      <div class="md:col-span-2">
+        <span id="rfq-file-label" class={labelClass}>{t.fields.attachment}</span>
+        <label
+          for="rfq-attachment"
+          class="group flex min-h-14 cursor-pointer items-center gap-4 border border-dashed border-coolgray-300 bg-coolgray-50 px-5 py-4 transition-colors hover:border-steel-400 hover:bg-steel-50"
+        >
+          <svg aria-hidden="true" class="h-6 w-6 shrink-0 text-steel" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 0 4 4m-4-4L8 8M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" /></svg>
+          <span id="rfq-file-name" class="text-sm text-coolgray-600 group-hover:text-navy" data-default={filePrompt}>{filePrompt}</span>
+        </label>
+        <input type="file" id="rfq-attachment" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" class="sr-only" aria-describedby="rfq-file-label" />
+        <p id="rfq-file-error" class="mt-2 hidden text-sm font-medium text-red-700" role="alert"></p>
+      </div>
+    </div>
+
+    <p class="mt-6 text-xs leading-5 text-coolgray-600">{consentNote}</p>
+
+    <div class="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
+      <button type="submit" id="rfq-submit" class="btn-navy w-full justify-center sm:w-auto">
+        {t.submit}
+        <span aria-hidden="true">→</span>
+      </button>
+      <p class="text-xs text-coolgray-500">
+        {lang === 'en' ? 'Prefer email?' : 'Par e-mail ?'}
+        <a href={lang === 'en' ? '/en/contact' : '/fr/contact'} class="font-semibold text-steel underline-offset-2 hover:underline">{nav.contact}</a>
+      </p>
+    </div>
+  </form>
+
+  <div id="rfq-status" class="mt-6 hidden rounded-lg border p-5" role="status" aria-live="polite" tabindex="-1"></div>
+</div>
+
+<script>
+  const form = document.getElementById('rfq-form') as HTMLFormElement | null;
+  const fileInput = document.getElementById('rfq-attachment') as HTMLInputElement | null;
+  const fileName = document.getElementById('rfq-file-name');
+  const fileError = document.getElementById('rfq-file-error');
+  const statusBox = document.getElementById('rfq-status');
+  const submitBtn = document.getElementById('rfq-submit') as HTMLButtonElement | null;
+  const isFr = document.documentElement.lang === 'fr';
+
+  const ACCEPTED = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.jpg', '.jpeg', '.png'];
+  const MAX_BYTES = 10 * 1024 * 1024;
+
+  const setFileError = (message: string) => {
+    if (fileError) {
+      fileError.textContent = message;
+      fileError.classList.toggle('hidden', !message);
+    }
+  };
+
+  fileInput?.addEventListener('change', () => {
+    const file = fileInput.files?.[0];
+    setFileError('');
+    if (!file) {
+      if (fileName) fileName.textContent = fileName.dataset.default ?? '';
+      return;
+    }
+    const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+    if (!ACCEPTED.includes(ext)) {
+      fileInput.value = '';
+      if (fileName) fileName.textContent = fileName.dataset.default ?? '';
+      setFileError(isFr ? 'Ce type de fichier n\'est pas pris en charge.' : 'This file type is not supported.');
+      return;
+    }
+    if (file.size > MAX_BYTES) {
+      fileInput.value = '';
+      if (fileName) fileName.textContent = fileName.dataset.default ?? '';
+      setFileError(isFr ? 'Ce fichier dépasse 10 Mo. Veuillez joindre un fichier plus léger.' : 'This file is larger than 10 MB. Please attach a smaller file.');
+      return;
+    }
+    if (fileName) fileName.textContent = `${file.name} (${(file.size / 1024).toFixed(0)} KB)`;
+  });
+
+  const showStatus = (kind: 'info' | 'warn', html: string) => {
+    if (!statusBox) return;
+    const styles = kind === 'info'
+      ? 'border-steel-200 bg-steel-50 text-navy-900'
+      : 'border-amber-300 bg-amber-50 text-navy-900';
+    statusBox.className = `mt-6 rounded-lg border p-5 text-sm leading-6 ${styles}`;
+    statusBox.innerHTML = html;
+    statusBox.classList.remove('hidden');
+    statusBox.focus();
+  };
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    if (fileInput?.files?.[0]) {
+      const file = fileInput.files[0];
+      const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+      if (!ACCEPTED.includes(ext) || file.size > MAX_BYTES) {
+        setFileError(isFr ? 'Vérifiez la pièce jointe avant l\'envoi.' : 'Please check the attachment before sending.');
+        fileInput?.focus();
+        return;
+      }
+    }
+
+    if (submitBtn) submitBtn.disabled = true;
+
+    const data = new FormData(form);
+    const lines = [
+      `${isFr ? 'Entreprise' : 'Company'}: ${data.get('company')}`,
+      `${isFr ? 'Contact' : 'Contact person'}: ${data.get('contact')}`,
+      `Email: ${data.get('email')}`,
+      `${isFr ? 'Téléphone / WhatsApp' : 'Phone / WhatsApp'}: ${data.get('phone')}`,
+      `${isFr ? 'Pays / Ville' : 'Country / City'}: ${data.get('country')} / ${data.get('city')}`,
+      `${isFr ? 'Secteur' : 'Industry'}: ${data.get('industry')}`,
+      `${isFr ? 'Produit / Besoin' : 'Product / Requirement'}: ${data.get('product')}`,
+      `${isFr ? 'Quantité' : 'Quantity'}: ${data.get('quantity')}`,
+      `${isFr ? 'Date de livraison souhaitée' : 'Required delivery date'}: ${data.get('deliveryDate')}`,
+      '',
+      `${isFr ? 'Message / Spécifications' : 'Message / Specifications'}:`,
+      String(data.get('message') ?? ''),
+    ];
+    const subject = `${isFr ? 'Demande de devis' : 'RFQ'} - ${data.get('company')} - ${data.get('product')}`;
+    const mailto = `mailto:newbusinesslight@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
+
+    showStatus(
+      'info',
+      isFr
+        ? '<p class="font-semibold">Votre application e-mail s\'ouvre avec le récapitulatif de votre demande.</p><p class="mt-2">Si rien ne se passe, écrivez-nous directement à <a class="font-semibold underline" href="mailto:newbusinesslight@gmail.com">newbusinesslight@gmail.com</a> ou appelez le <a class="font-semibold underline" href="tel:+243990902654">+243 990 902 654</a>. La pièce jointe devra être ajoutée manuellement à l\'e-mail.</p>'
+        : '<p class="font-semibold">Your email application is opening with your requirement summary.</p><p class="mt-2">If nothing happens, email us directly at <a class="font-semibold underline" href="mailto:newbusinesslight@gmail.com">newbusinesslight@gmail.com</a> or call <a class="font-semibold underline" href="tel:+243990902654">+243 990 902 654</a>. Attachments must be added to the email manually.</p>',
+    );
+
+    window.location.href = mailto;
+
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      const label = submitBtn.childNodes[0];
+      window.setTimeout(() => { if (label) label.textContent = isFr ? 'Soumettre la demande' : 'Submit Request'; }, 1800);
+      if (label) label.textContent = isFr ? 'Ouverture…' : 'Opening…';
+    }
+  });
+</script>

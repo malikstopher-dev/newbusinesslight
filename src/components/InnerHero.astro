@@ -1,0 +1,81 @@
+---
+import type { Locale } from '../i18n/translations';
+import type { ResponsiveImage } from '../data/assets';
+import ResponsivePicture from './ResponsivePicture.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  image: ResponsiveImage;
+  imagePosition?: string;
+  mobileImagePosition?: string;
+  overlayStrength?: 'light' | 'balanced' | 'strong';
+  lang: Locale;
+  cta?: { label: string; href: string };
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  image,
+  imagePosition = 'center',
+  mobileImagePosition = 'center',
+  overlayStrength = 'balanced',
+  cta,
+} = Astro.props;
+
+const overlays = {
+  light: 'linear-gradient(90deg, rgba(7,23,42,.70) 0%, rgba(10,46,91,.42) 46%, rgba(10,46,91,.10) 100%)',
+  balanced: 'linear-gradient(90deg, rgba(7,23,42,.82) 0%, rgba(10,46,91,.52) 45%, rgba(10,46,91,.14) 100%)',
+  strong: 'linear-gradient(90deg, rgba(7,23,42,.88) 0%, rgba(10,46,91,.60) 48%, rgba(10,46,91,.20) 100%)',
+};
+---
+
+<section
+  class="inner-hero relative isolate flex min-h-[clamp(370px,62svh,560px)] items-center overflow-hidden bg-navy sm:min-h-[440px] lg:min-h-[540px]"
+  style={`--hero-position:${imagePosition};--hero-mobile-position:${mobileImagePosition}`}
+>
+  <ResponsivePicture
+    image={image}
+    alt=""
+    width="1600"
+    height="900"
+    pictureClass="absolute inset-0 -z-20 block h-full w-full"
+    class="inner-hero-image h-full w-full object-cover"
+    loading="eager"
+    decoding="sync"
+    fetchpriority="high"
+  />
+  <div class="absolute inset-0 -z-10" style={`background:${overlays[overlayStrength]}`}></div>
+  <div class="absolute inset-0 -z-10 bg-gradient-to-t from-navy-950/45 via-transparent to-transparent"></div>
+  <div aria-hidden="true" class="absolute -bottom-24 -right-20 h-64 w-[44rem] rotate-[-8deg] rounded-[50%] border-t border-white/20"></div>
+  <div aria-hidden="true" class="absolute -bottom-16 -right-16 h-52 w-[38rem] rotate-[-8deg] rounded-[50%] border-t border-white/10"></div>
+
+  <div class="mx-auto w-full max-w-7xl px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+    <div class="max-w-3xl">
+      <p class="mb-5 text-xs font-bold tracking-[0.22em] text-steel-200 sm:text-sm">{eyebrow}</p>
+      <h1 class="max-w-[18ch] text-[clamp(1.9rem,9vw,2.75rem)] font-bold leading-[1.05] text-white sm:text-5xl lg:text-6xl">{title}</h1>
+      <p class="mt-6 max-w-2xl text-base leading-7 text-white/86 sm:text-lg sm:leading-8">{description}</p>
+      {cta && (
+        <a href={cta.href} class="btn-primary mt-8">
+          {cta.label}
+          <span aria-hidden="true">→</span>
+        </a>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .inner-hero :global(.inner-hero-image) {
+    object-position: var(--hero-position);
+  }
+  @media (max-width: 639px) {
+    .inner-hero :global(.inner-hero-image) {
+      filter: saturate(.92) contrast(1.03);
+      object-position: var(--hero-mobile-position);
+    }
+  }
+</style>

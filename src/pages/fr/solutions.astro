@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHero from '../../components/InnerHero.astro';
+import CTASection from '../../components/CTASection.astro';
+import ResponsivePicture from '../../components/ResponsivePicture.astro';
+import { pageHeroes, solutionImages } from '../../data/assets';
+import { getRoute } from '../../data/routes';
+import { locales } from '../../i18n/translations';
+
+const lang = 'fr' as const;
+const t = locales[lang];
+
+const anchorIds = ['industrial-supply', 'procurement', 'product-sourcing', 'conveyor-mechanical', 'requirement-support', 'electrical-infrastructure'];
+---
+
+<BaseLayout
+  title="Solutions | New Business Light sarl | Fourniture industrielle RDC"
+  description="Fourniture industrielle, approvisionnement, recherche de produits, composants de convoyeurs, accompagnement des besoins et sourcing électrique et infrastructure pour les opérations en RDC."
+  lang={lang}
+  canonicalPath="/fr/solutions"
+  preloadImage={pageHeroes.solutions}
+>
+  <InnerHero
+    lang={lang}
+    eyebrow={t.solutions.eyebrow}
+    title={t.solutions.title}
+    description="Des services de fourniture et de sourcing au service des opérations industrielles en République démocratique du Congo."
+    image={pageHeroes.solutions}
+    imagePosition="center 55%"
+    overlayStrength="balanced"
+  />
+
+  <section class="bg-white py-16 lg:py-24">
+    <div class="mx-auto max-w-7xl space-y-16 px-4 sm:px-6 lg:px-8 lg:space-y-28">
+      {t.solutions.items.map((solution, i) => (
+        <article id={anchorIds[i]} class={`grid scroll-mt-28 items-center gap-10 lg:grid-cols-2 lg:gap-20 ${i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''}`}>
+          <ResponsivePicture image={solutionImages[i]} alt="" width="1600" height="900" loading="lazy" decoding="async" class="aspect-[16/10] w-full rounded-md object-cover shadow-[0_18px_50px_rgba(7,23,42,0.09)]" />
+          <div>
+            <span class="font-heading text-sm font-bold tracking-widest text-steel">0{i + 1}</span>
+            <h2 class="section-title mt-3 text-[clamp(1.6rem,3vw,2.5rem)]">{solution.title}</h2>
+            <p class="section-body mt-4">{solution.description}</p>
+            <a href={getRoute('rfq', lang)} class="btn-navy mt-7">Discuter de ce besoin<span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <CTASection
+    title="Un besoin produit précis ?"
+    description="Transmettez spécification, quantité et délais. Nous coordonnons la recherche et préparons une offre commerciale."
+    tone="navy"
+    primary={{ label: t.nav.rfq, href: getRoute('rfq', lang) }}
+    secondary={{ label: t.nav.products, href: getRoute('products', lang) }}
+  />
+</BaseLayout>

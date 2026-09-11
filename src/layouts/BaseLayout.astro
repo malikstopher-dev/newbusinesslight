@@ -1,0 +1,86 @@
+---
+import type { Locale } from '../i18n/translations';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import { getAlternateRoute } from '../data/routes';
+import { site } from '../data/site';
+import type { ResponsiveImage } from '../data/assets';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  lang: Locale;
+  canonicalPath?: string;
+  noindex?: boolean;
+  preloadImage?: ResponsiveImage;
+}
+
+const { title, description = 'Industrial supply, procurement and sourcing for operations across the Democratic Republic of the Congo.', lang, canonicalPath, noindex = false, preloadImage } = Astro.props;
+
+const baseUrl = site.url;
+const canonical = canonicalPath ? `${baseUrl}${canonicalPath}` : `${baseUrl}${Astro.url.pathname}`;
+const ogImage = `${baseUrl}${site.ogImage}`;
+
+const alternateEn = `${baseUrl}${getAlternateRoute(Astro.url.pathname, 'en')}`;
+const alternateFr = `${baseUrl}${getAlternateRoute(Astro.url.pathname, 'fr')}`;
+const xDefault = alternateEn;
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.name,
+  url: site.url,
+  logo: `${site.url}${site.logo}`,
+  email: site.emails[1],
+  telephone: site.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: site.address.city,
+    addressCountry: 'CD',
+  },
+};
+---
+
+<!DOCTYPE html>
+<html lang={lang} class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  {noindex && <meta name="robots" content="noindex, nofollow" />}
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="en" href={alternateEn} />
+  <link rel="alternate" hreflang="fr" href={alternateFr} />
+  <link rel="alternate" hreflang="x-default" href={xDefault} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:url" content={canonical} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  {preloadImage && (
+    <>
+      <link rel="preload" as="image" href={preloadImage.mobile} media="(max-width: 640px)" fetchpriority="high" />
+      <link rel="preload" as="image" href={preloadImage.desktop} media="(min-width: 641px)" fetchpriority="high" />
+    </>
+  )}
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+</head>
+<body class="min-h-screen flex flex-col">
+  <a class="skip-link" href="#main-content">{lang === 'en' ? 'Skip to content' : 'Aller au contenu'}</a>
+  <Header lang={lang} />
+  <main id="main-content" class="flex-1">
+    <slot />
+  </main>
+  <Footer lang={lang} />
+</body>
+</html>

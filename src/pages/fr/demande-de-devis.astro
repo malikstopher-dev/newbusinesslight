@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHero from '../../components/InnerHero.astro';
+import RfqForm from '../../components/RfqForm.astro';
+import { pageHeroes } from '../../data/assets';
+import { locales } from '../../i18n/translations';
+
+const lang = 'fr' as const;
+const t = locales[lang];
+---
+
+<BaseLayout
+  title="Demande de devis | New Business Light sarl | RFQ industriel RDC"
+  description="Transmettez votre besoin de fourniture industrielle à New Business Light sarl. Partagez spécification, quantité et délais pour une offre commerciale coordonnée."
+  lang={lang}
+  canonicalPath="/fr/demande-de-devis"
+  preloadImage={pageHeroes.rfq}
+>
+  <InnerHero
+    lang={lang}
+    eyebrow={t.rfq.eyebrow}
+    title={t.rfq.title}
+    description={t.rfq.description}
+    image={pageHeroes.rfq}
+    imagePosition="center 40%"
+    overlayStrength="balanced"
+  />
+  <RfqForm lang={lang} />
+</BaseLayout>

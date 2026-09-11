@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerHero from '../../components/InnerHero.astro';
+import RfqForm from '../../components/RfqForm.astro';
+import { pageHeroes } from '../../data/assets';
+import { locales } from '../../i18n/translations';
+
+const lang = 'en' as const;
+const t = locales[lang];
+---
+
+<BaseLayout
+  title="Request a Quote | New Business Light sarl | Industrial RFQ DRC"
+  description="Submit your industrial supply requirement to New Business Light sarl. Share your specification, quantity and delivery needs for a coordinated commercial offer."
+  lang={lang}
+  canonicalPath="/en/request-a-quote"
+  preloadImage={pageHeroes.rfq}
+>
+  <InnerHero
+    lang={lang}
+    eyebrow={t.rfq.eyebrow}
+    title={t.rfq.title}
+    description={t.rfq.description}
+    image={pageHeroes.rfq}
+    imagePosition="center 40%"
+    overlayStrength="balanced"
+  />
+  <RfqForm lang={lang} />
+</BaseLayout>

@@ -1,0 +1,44 @@
+---
+import type { ResponsiveImage } from '../data/assets';
+
+interface Props {
+  image: ResponsiveImage;
+  alt: string;
+  class?: string;
+  pictureClass?: string;
+  style?: string;
+  width?: string | number;
+  height?: string | number;
+  loading?: 'eager' | 'lazy';
+  decoding?: 'sync' | 'async' | 'auto';
+  fetchpriority?: 'high' | 'low' | 'auto';
+}
+
+const {
+  image,
+  alt,
+  class: className,
+  pictureClass = 'block',
+  style,
+  width = 1600,
+  height = 900,
+  loading = 'lazy',
+  decoding = 'async',
+  fetchpriority,
+} = Astro.props;
+---
+
+<picture class={pictureClass}>
+  <source media="(max-width: 640px)" srcset={image.mobile} />
+  <img
+    src={image.desktop}
+    alt={alt}
+    width={width}
+    height={height}
+    class={className}
+    style={style}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={fetchpriority}
+  />
+</picture>
