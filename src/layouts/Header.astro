@@ -14,6 +14,7 @@ const currentKey = getRouteKey(Astro.url.pathname);
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
 const otherLang: Locale = lang === 'en' ? 'fr' : 'en';
 const otherLangLabel = lang === 'en' ? 'FR' : 'EN';
+const currentLangLabel = lang === 'en' ? 'EN' : 'FR';
 const otherLangPath = `${getAlternateRoute(Astro.url.pathname, otherLang)}${Astro.url.search}`;
 
 const navLinks: { key: RouteKey; label: string }[] = [
@@ -31,13 +32,15 @@ const menuLabel = lang === 'en' ? 'Open navigation' : 'Ouvrir la navigation';
 const closeLabel = lang === 'en' ? 'Close navigation' : 'Fermer la navigation';
 const navLabel = lang === 'en' ? 'Main navigation' : 'Navigation principale';
 const languageLabel = lang === 'en' ? 'Afficher le site en français' : 'View site in English';
+const languageHeading = lang === 'en' ? 'Language' : 'Langue';
 const locationLabel = lang === 'en' ? 'Lubumbashi, DRC' : 'Lubumbashi, RDC';
+const drawerTagline = lang === 'en' ? 'INDUSTRIAL SUPPLY IN THE DRC' : 'FOURNITURE INDUSTRIELLE EN RDC';
 ---
 
 <header id="main-header" class="site-header sticky top-0 z-50 border-b border-navy/10 bg-white/94 backdrop-blur-xl">
-  <div id="header-inner" class="header-inner relative mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-    <a href={getRoute('home', lang)} class="relative z-10 flex shrink-0 items-center" aria-label={`${site.name} - ${t.home}`}>
-      <img src={site.logo} width="890" height="195" alt="New Business Light sarl" class="h-8 w-auto sm:h-10 xl:h-11" />
+  <div id="header-inner" class="header-inner relative mx-auto flex max-w-[1600px] items-center justify-between gap-3 px-4 sm:gap-4 sm:px-6 lg:px-8">
+    <a href={getRoute('home', lang)} class="relative z-10 flex min-w-0 shrink items-center" aria-label={`${site.name} - ${t.home}`}>
+      <img src={site.logo} width="890" height="195" alt="New Business Light sarl" class="h-8 w-auto max-w-[52vw] object-contain sm:h-10 xl:h-11" />
     </a>
 
     <nav class="hidden min-[1240px]:flex min-[1240px]:items-stretch min-[1240px]:self-stretch" aria-label={navLabel}>
@@ -71,7 +74,7 @@ const locationLabel = lang === 'en' ? 'Lubumbashi, DRC' : 'Lubumbashi, RDC';
       </a>
       <button
         id="mobile-menu-btn"
-        class="menu-button inline-flex h-11 w-11 items-center justify-center rounded-full border border-coolgray-200 bg-white text-navy shadow-[0_8px_24px_rgba(7,23,42,0.1)] transition hover:border-steel-200 hover:bg-coolgray-50 min-[1240px]:hidden"
+        class="menu-button inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-coolgray-200 bg-white text-navy shadow-[0_8px_24px_rgba(7,23,42,0.1)] transition hover:border-steel-200 hover:bg-coolgray-50 min-[1240px]:hidden"
         aria-label={menuLabel}
         data-open-label={menuLabel}
         data-close-label={closeLabel}
@@ -86,50 +89,75 @@ const locationLabel = lang === 'en' ? 'Lubumbashi, DRC' : 'Lubumbashi, RDC';
       </button>
     </div>
   </div>
+</header>
 
-  <div id="mobile-menu" class="mobile-menu fixed inset-x-0 bottom-0 top-[72px] min-[1240px]:hidden" aria-hidden="true" inert>
-    <button class="mobile-menu-backdrop absolute inset-0 bg-navy-950/20 backdrop-blur-sm" aria-label={closeLabel} data-menu-close type="button"></button>
-    <nav class="mobile-menu-panel relative ml-auto flex h-full w-full max-w-lg flex-col overflow-y-auto border-t border-white/70 bg-gradient-to-br from-white via-coolgray-50 to-navy-50 px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 shadow-[-18px_24px_70px_rgba(7,23,42,0.2)] sm:px-7" aria-label={navLabel}>
-      <div class="mb-4 flex items-center gap-3">
-        <span class="h-px w-8 bg-steel"></span>
-        <p class="font-heading text-[10px] font-bold tracking-[0.22em] text-steel">{lang === 'en' ? 'INDUSTRIAL SUPPLY IN THE DRC' : 'FOURNITURE INDUSTRIELLE EN RDC'}</p>
-      </div>
+<div
+  id="mobile-menu"
+  class="mobile-menu min-[1240px]:hidden"
+  aria-hidden="true"
+  inert
+>
+  <button class="mobile-menu-backdrop absolute inset-0" aria-label={closeLabel} data-menu-close type="button"></button>
+  <nav
+    class="mobile-menu-panel absolute inset-x-0 bottom-0 top-0 flex max-h-none flex-col overflow-y-auto overscroll-contain bg-white px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-6 shadow-[0_10px_60px_rgba(7,23,42,0.22)] sm:px-7"
+    aria-label={navLabel}
+  >
+    <div class="mb-5 flex items-center gap-3">
+      <span class="h-px w-8 bg-steel"></span>
+      <p class="font-heading text-[10px] font-bold tracking-[0.22em] text-steel">{drawerTagline}</p>
+    </div>
 
-      <div class="grid gap-2">
-        {navLinks.map((link, i) => {
-          const active = currentKey === link.key;
-          return (
+    <ul class="flex flex-col">
+      {navLinks.map((link, i) => {
+        const active = currentKey === link.key;
+        return (
+          <li>
             <a
               href={getRoute(link.key, lang)}
               aria-current={active ? 'page' : undefined}
-              class={`mobile-nav-link flex min-h-14 items-center justify-between rounded-xl border px-4 py-3 text-sm font-semibold shadow-sm transition ${active ? 'border-steel-200 bg-navy text-white' : 'border-white bg-white/78 text-navy hover:border-steel-200 hover:bg-white'}`}
+              data-menu-link
+              class={`mobile-nav-link group flex min-h-[3rem] items-center justify-between gap-4 py-2 pr-1 sm:min-h-[3.5rem] ${active ? '' : 'border-b border-coolgray-100'}`}
             >
-              <span class="flex items-center gap-3">
-                <span class={`flex h-7 w-7 items-center justify-center rounded-lg text-[10px] font-bold ${active ? 'bg-white/12 text-white' : 'bg-navy-50 text-steel'}`}>{String(i + 1).padStart(2, '0')}</span>
-                {link.label}
+              <span class="flex min-w-0 items-center gap-3 sm:gap-3.5">
+                <span class={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-heading text-[11px] font-bold sm:h-8 sm:w-8 ${active ? 'bg-navy text-white shadow-[0_6px_18px_rgba(10,46,91,0.28)]' : 'bg-navy-50 text-steel'}`}>{String(i + 1).padStart(2, '0')}</span>
+                <span class={`truncate font-heading text-sm font-bold sm:text-[15px] ${active ? 'text-navy' : 'text-navy-800'}`}>{link.label}</span>
               </span>
-              <span aria-hidden="true" class="text-lg leading-none">›</span>
+              <span aria-hidden="true" class={`text-lg leading-none transition-transform group-hover:translate-x-0.5 ${active ? 'text-steel' : 'text-silver-400'}`}>›</span>
             </a>
-          );
-        })}
+          </li>
+        );
+      })}
+    </ul>
+
+    <div class="mt-auto pt-4 sm:pt-6">
+      <p class="mb-2.5 font-heading text-[10px] font-bold tracking-[0.22em] text-coolgray-500 sm:mb-3">{languageHeading}</p>
+      <div class="flex items-center gap-2">
+        <span aria-current="true" class="inline-flex h-10 min-w-14 items-center justify-center rounded-lg bg-navy px-3 font-heading text-xs font-bold tracking-wider text-white">{currentLangLabel}</span>
+        <a
+          href={otherLangPath}
+          data-menu-link
+          aria-label={languageLabel}
+          class="inline-flex h-10 min-w-14 items-center justify-center rounded-lg border border-coolgray-200 bg-white px-3 font-heading text-xs font-bold tracking-wider text-navy transition hover:border-steel-300 hover:text-steel"
+        >
+          {otherLangLabel}
+        </a>
       </div>
 
-      <div class="mt-auto pt-5">
-        <a href={getRoute('rfq', lang)} class="group flex min-h-14 w-full items-center justify-between rounded-xl bg-navy px-5 font-heading text-sm font-bold text-white shadow-[0_14px_34px_rgba(10,46,91,0.28)] transition hover:bg-navy-900">
-          {t.rfq}
-          <span aria-hidden="true" class="text-xl transition-transform group-hover:translate-x-1">→</span>
-        </a>
-        <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-navy/10 pt-4 text-[11px] font-medium text-coolgray-600">
-          <span class="inline-flex items-center gap-1.5">
-            <svg aria-hidden="true" class="h-3.5 w-3.5 text-steel" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 21s-7-5.1-7-11a7 7 0 1 1 14 0c0 5.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>
-            {locationLabel}
-          </span>
-          <a class="text-steel hover:text-navy" href={`mailto:${site.emails[1]}`}>{site.emails[1]}</a>
-        </div>
+      <a href={getRoute('rfq', lang)} data-menu-link class="group mt-5 flex min-h-[3.5rem] w-full items-center justify-between rounded-xl bg-navy px-5 font-heading text-sm font-bold text-white shadow-[0_14px_34px_rgba(10,46,91,0.28)] transition hover:bg-navy-900">
+        {t.rfq}
+        <span aria-hidden="true" class="text-xl transition-transform group-hover:translate-x-1">→</span>
+      </a>
+
+      <div class="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-navy/10 pt-4 text-[11px] font-medium text-coolgray-600">
+        <span class="inline-flex items-center gap-1.5">
+          <svg aria-hidden="true" class="h-3.5 w-3.5 text-steel" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 21s-7-5.1-7-11a7 7 0 1 1 14 0c0 5.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          {locationLabel}
+        </span>
+        <a class="text-steel hover:text-navy" href={`mailto:${site.emails[1]}`}>{site.emails[1]}</a>
       </div>
-    </nav>
-  </div>
-</header>
+    </div>
+  </nav>
+</div>
 
 <style>
   .site-header {
@@ -160,15 +188,27 @@ const locationLabel = lang === 'en' ? 'Lubumbashi, DRC' : 'Lubumbashi, RDC';
     transform: scaleX(1);
   }
   .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    top: 72px;
+    height: auto;
+    height: 100dvh;
     visibility: hidden;
     pointer-events: none;
     opacity: 0;
     transition: opacity 260ms ease, visibility 0s linear 260ms;
   }
+  .mobile-menu-backdrop {
+    background: rgba(7, 23, 42, .32);
+    backdrop-filter: blur(3px);
+    border: 0;
+    cursor: pointer;
+  }
   .mobile-menu-panel {
-    transform: translateY(-12px) scale(.99);
+    transform: translateY(-14px);
     opacity: 0;
-    transition: transform 280ms cubic-bezier(.16, 1, .3, 1), opacity 220ms ease;
+    transition: transform 300ms cubic-bezier(.16, 1, .3, 1), opacity 220ms ease;
   }
   .mobile-menu.is-open {
     visibility: visible;
@@ -177,7 +217,7 @@ const locationLabel = lang === 'en' ? 'Lubumbashi, DRC' : 'Lubumbashi, RDC';
     transition-delay: 0s;
   }
   .mobile-menu.is-open .mobile-menu-panel {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
     opacity: 1;
   }
   .header-rfq {
@@ -210,8 +250,10 @@ const locationLabel = lang === 'en' ? 'Lubumbashi, DRC' : 'Lubumbashi, RDC';
   const menuOpen = document.getElementById('menu-icon-open');
   const menuClose = document.getElementById('menu-icon-close');
   let isOpen = false;
+  let savedScrollY = 0;
 
   const setMenu = (open: boolean, restoreFocus = true) => {
+    if (open) savedScrollY = window.scrollY;
     isOpen = open;
     mobileMenu?.classList.toggle('is-open', open);
     mobileMenu?.setAttribute('aria-hidden', String(!open));
@@ -221,12 +263,18 @@ const locationLabel = lang === 'en' ? 'Lubumbashi, DRC' : 'Lubumbashi, RDC';
     menuBtn?.setAttribute('aria-expanded', String(open));
     menuBtn?.setAttribute('aria-label', open ? menuBtn.dataset.closeLabel ?? '' : menuBtn.dataset.openLabel ?? '');
     document.documentElement.style.overflow = open ? 'hidden' : '';
-    if (open) mobileMenu?.querySelector<HTMLAnchorElement>('a')?.focus();
-    else if (restoreFocus) menuBtn?.focus();
+    if (open) mobileMenu?.querySelector<HTMLAnchorElement>('.mobile-nav-link')?.focus();
+    else if (restoreFocus) {
+      menuBtn?.focus();
+      window.scrollTo(0, savedScrollY);
+    }
   };
 
   menuBtn?.addEventListener('click', () => setMenu(!isOpen));
   mobileMenu?.querySelector('[data-menu-close]')?.addEventListener('click', () => setMenu(false));
+  mobileMenu?.querySelectorAll('[data-menu-link]').forEach((link) => {
+    link.addEventListener('click', () => setMenu(false, false));
+  });
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && isOpen) setMenu(false);
   });
