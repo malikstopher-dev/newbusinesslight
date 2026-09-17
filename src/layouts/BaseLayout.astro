@@ -14,9 +14,10 @@ interface Props {
   canonicalPath?: string;
   noindex?: boolean;
   preloadImage?: ResponsiveImage;
+  transparentHeader?: boolean;
 }
 
-const { title, description = 'Industrial supply, procurement and sourcing for operations across the Democratic Republic of the Congo.', lang, canonicalPath, noindex = false, preloadImage } = Astro.props;
+const { title, description = 'Industrial supply, procurement and sourcing for operations across the Democratic Republic of the Congo.', lang, canonicalPath, noindex = false, preloadImage, transparentHeader = false } = Astro.props;
 
 const baseUrl = site.url;
 const canonical = canonicalPath ? `${baseUrl}${canonicalPath}` : `${baseUrl}${Astro.url.pathname}`;
@@ -78,7 +79,7 @@ const organizationSchema = {
 </head>
 <body class="min-h-screen flex flex-col">
   <a class="skip-link" href="#main-content">{lang === 'en' ? 'Skip to content' : 'Aller au contenu'}</a>
-  <Header lang={lang} />
+  <Header lang={lang} overlay={transparentHeader} />
   <main id="main-content" class="flex-1">
     <slot />
   </main>

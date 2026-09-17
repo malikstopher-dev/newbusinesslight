@@ -6,9 +6,10 @@ import { site } from '../data/site';
 
 interface Props {
   lang: Locale;
+  overlay?: boolean;
 }
 
-const { lang } = Astro.props;
+const { lang, overlay = false } = Astro.props;
 const t = locales[lang].nav;
 const currentKey = getRouteKey(Astro.url.pathname);
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
@@ -37,10 +38,11 @@ const locationLabel = lang === 'en' ? 'Lubumbashi, DRC' : 'Lubumbashi, RDC';
 const drawerTagline = lang === 'en' ? 'INDUSTRIAL SUPPLY IN THE DRC' : 'FOURNITURE INDUSTRIELLE EN RDC';
 ---
 
-<header id="main-header" class="site-header sticky top-0 z-50 border-b border-navy/10 bg-white/94 backdrop-blur-xl">
+<header id="main-header" class={`site-header top-0 z-50 border-b backdrop-blur-xl ${overlay ? 'is-overlay fixed inset-x-0 border-white/20 bg-transparent' : 'sticky border-navy/10 bg-white/94'}`}>
   <div id="header-inner" class="header-inner relative mx-auto flex max-w-[1600px] items-center justify-between gap-3 px-4 sm:gap-4 sm:px-6 lg:px-8">
     <a href={getRoute('home', lang)} class="relative z-10 flex min-w-0 shrink items-center" aria-label={`${site.name} - ${t.home}`}>
-      <img src={site.logo} width="595" height="125" alt="New Business Light sarl" class="h-8 w-auto max-w-[52vw] object-contain sm:h-10 xl:h-11" />
+      <img src={site.logo} width="445" height="106" alt="New Business Light sarl" class="header-logo header-logo-light h-8 w-auto max-w-[52vw] object-contain sm:h-10 xl:h-11" />
+      {overlay && <img src={site.logoWhite} width="305" height="86" alt="" class="header-logo header-logo-dark hidden h-8 w-auto max-w-[52vw] object-contain sm:h-10 xl:h-11" />}
     </a>
 
     <nav class="hidden min-[1240px]:flex min-[1240px]:items-stretch min-[1240px]:self-stretch" aria-label={navLabel}>
@@ -162,6 +164,31 @@ const drawerTagline = lang === 'en' ? 'INDUSTRIAL SUPPLY IN THE DRC' : 'FOURNITU
 <style>
   .site-header {
     transition: box-shadow 220ms ease, background-color 220ms ease;
+  }
+  .site-header.is-overlay:not(.is-scrolled) {
+    background: transparent;
+  }
+  .site-header.is-overlay:not(.is-scrolled) .header-logo-light {
+    display: none;
+  }
+  .site-header.is-overlay:not(.is-scrolled) .header-logo-dark {
+    display: block;
+  }
+  .site-header.is-overlay:not(.is-scrolled) .nav-link {
+    color: white;
+  }
+  .site-header.is-overlay:not(.is-scrolled) .nav-link::after {
+    background: white;
+  }
+  .site-header.is-overlay:not(.is-scrolled) .language-pill,
+  .site-header.is-overlay:not(.is-scrolled) .menu-button {
+    border-color: rgba(255, 255, 255, .32);
+    background: rgba(2, 31, 68, .34);
+    color: white;
+  }
+  .site-header.is-overlay:not(.is-scrolled) .header-rfq {
+    background: white;
+    color: var(--color-navy);
   }
   .header-inner {
     height: 72px;
